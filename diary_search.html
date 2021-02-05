@@ -154,6 +154,29 @@
   </thead>
   <tbody>
     <tr>
+      <td><span class="label">target</span></td>
+      <td><b>string<span class="label label-important">*必須</span></b></td>
+      <td>以下のいずれかを指定する
+          diary: 指定された diary_id の日記情報を取得、ただし指定したapiKeyのメンバーに閲覧権限がない場合は「400 Bad Request」が返却される
+          list: 公開範囲が「Web全体に公開」、「全員に公開」に設定されている日記の一覧を取得
+          list_mine: 指定した apiKey のメンバーの日記の一覧を取得、公開範囲が「公開しない」ものも含む
+          list_member:
+            - member_id を指定しない場合は、list_mine と同じ一覧を取得
+            - 指定した member_id が指定した apiKey のメンバーのメンバーIDの場合は list_mine と同じ一覧を取得
+            - 指定した member_id が指定した apiKey のメンバーのフレンドの場合は、公開範囲が「Web全体に公開」、「全員に公開」、「マイフレンドまで公開」に設定されている member_id の日記一覧を取得
+            - 指定した member_id が指定した apiKey のメンバーのフレンドではない場合は、公開範囲が「Web全体に公開」、「全員に公開」に設定されている member_id の日記一覧を取得</td>
+    </tr>
+    <tr>
+      <td><span class="label">diary_id</span></td>
+      <td><b>integer</b></td>
+      <td>閲覧したい日記のIDを指定する。<td>target = diary の場合に<span class="label label-important">*必須項目</span>です。</td>
+    </tr>
+    <tr>
+      <td><span class="label">member_id</span></td>
+      <td><b>integer</b></td>
+      <td>閲覧したいメンバーIDを指定します。target = list_member の場合に指定可能、それ以外の場合の指定は無効になります。</td>
+    </tr>
+    <tr>
       <td><span class="label">format</span></td>
       <td><b>string</b></td>
       <td>取得フォーマットを指定します。このフィールドがない場合はnormalフォーマットになります。miniの場合のみ<span class="label label-important">*必須</span>です。
@@ -167,7 +190,14 @@
     <tr>
       <td><span class="label">page</span></td>
       <td><b>integer</b></td>
-      <td>formatがminiで､2ページ目以降を読む場合は<span class="label label-important">*必須</span>です｡</td>
+      <td>formatがminiで､2ページ目以降を読む場合は<span class="label label-important">*必須</span>です｡
+          指定されない場合のデフォルト値は「1」になります。target = diary の場合の指定は無効です。
+      </td>
+    </tr>
+    <tr>
+      <td><span class="label">limit</span></td>
+      <td><b>integer</b></td>
+      <td>指定されない場合のデフォルト値は「管理画面→プラグイン設定→ opDiaryPlugin 設定→日記API取得件数 に設定された件数」です。target = diary の場合の指定は無効です。</td>
     </tr>
   </tbody>
 </table>
@@ -272,7 +302,7 @@
 
 
 <h2>サンプルリクエスト normal</h2>
-<pre>$ curl http://example.com/api.php/diary/search.json?apiKey=a6a0fb34aeb63036883323875c4d5103a88bd266b1cb5cfcbef3df276a9f36dc\&id=6</pre>
+<pre>$ curl http://example.com/api.php/diary/search.json?apiKey=a6a0fb34aeb63036883323875c4d5103a88bd266b1cb5cfcbef3df276a9f36dc\&target=diary\&diary_id=6</pre>
 <br />
 
 <h2>サンプルレスポンス normal</h2>
@@ -280,7 +310,7 @@
 {
     "status": "success",
     "data":{
-        "id":"5",
+        "id":"6",
         "member":{
             "id":"1",
             "profile_image":"http:\/\/example.com\/images\/no_image.gif",
